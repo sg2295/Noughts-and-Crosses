@@ -1,0 +1,2 @@
+# Noughts and Crosses
+Noughts and Crosses (or Tic-tac-toe) is a two-player game played on a 3x3 board, where the players take turns in assigning noughts ('O') and crosses ('X'). The game ends when one of the players places three of their symbol ('X' or 'O') in a row horizontally, vertically or diagonally. The game is declared a draw if all slots of the board are populated, and neither player has won. The solution is capable of calculating the state of a given board (declare a winner or a draw, and recognise invalid board states).
