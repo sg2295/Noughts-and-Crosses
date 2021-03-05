@@ -27,41 +27,22 @@ public class Main {
 
     private static BoardState getStateOfBoard(String board) {
         BoardState state = null;
+        state = getBoardResult(board); // Get the result of the board
         return state;
     }
 
-    private static BoardState getWinner(String board) {
-        BoardState state;
-        // Check horizontal
-        for (int i = 0; i < 9; i += 3) {
-            state = triadState(board.charAt(i), board.charAt(i + 1), board.charAt(i + 2));
-            if (state != BoardState.INCOMPLETE && state != BoardState.DRAW) {
-                System.out.println("HORIZONTAL: " + state);
-                System.out.println(board.charAt(i) +""+ board.charAt(i + 1) +""+ board.charAt(i + 2));
-            }
-        }
-        // Check vertical
-        for (int i = 0; i < 3; i++) {
-            state = triadState(board.charAt(i), board.charAt(i + 3), board.charAt(i + 6));
-            if (state != BoardState.INCOMPLETE && state != BoardState.DRAW) { //
-                System.out.println("VERTICAL: " + state);
-                System.out.println(board.charAt(i) +""+ board.charAt(i + 3) +""+ board.charAt(i + 6));
-            }
-        }
-        // Check diagonal
-        // Check first diagonal
-        state = triadState(board.charAt(0), board.charAt(4), board.charAt(8));
-        if (state != BoardState.INCOMPLETE && state != BoardState.DRAW) {
-            System.out.println("Diagonal 1: " + state);
-            System.out.println(board.charAt(0) +""+ board.charAt(4) +""+board.charAt(8));
-        }
-        // Check second diagonal
-        state = triadState(board.charAt(2), board.charAt(4), board.charAt(6));
-        if (state != BoardState.INCOMPLETE && state != BoardState.DRAW) {
-            System.out.println("Diagonal 2: " + state);
-            System.out.println(board.charAt(2) +""+ board.charAt(4) +""+board.charAt(6));
-        }
-        return BoardState.DRAW;
+    private static BoardState getBoardResult(String board) {
+        BoardState horizontalRes = checkHorizontal(board);
+        if (isWinState(horizontalRes)) return horizontalRes;
+        BoardState verticalRes = checkVertical(board);
+        if (isWinState(verticalRes)) return verticalRes;
+        BoardState diagonalRes = checkDiagonal(board);
+        if (isWinState(diagonalRes)) return diagonalRes;
+        return (horizontalRes == verticalRes && verticalRes == diagonalRes && horizontalRes == BoardState.DRAW) ? BoardState.DRAW : BoardState.INCOMPLETE;
+    }
+
+    private static boolean isWinState(BoardState state) {
+        return state == BoardState.CROSSES_WIN || state == BoardState.NOUGHTS_WIN;
     }
 
     private static BoardState checkHorizontal(String board) {
@@ -136,11 +117,11 @@ public class Main {
     public static void main(String[] args) {
         // Main (driver) function, for illustrating code functionality
         // Diagonal
-        String board1 = "OXOXOXXOX";
+        String board1 = "OXOXO_XOX";
         printBoard(board1);
-//        getWinner(board1);
-        System.out.println(checkHorizontal(board1));
-        System.out.println(checkVertical(board1));
-        System.out.println(checkDiagonal(board1));
+        System.out.println(getBoardResult(board1));
+//        System.out.println(checkHorizontal(board1));
+//        System.out.println(checkVertical(board1));
+//        System.out.println(checkDiagonal(board1));
     }
 }
