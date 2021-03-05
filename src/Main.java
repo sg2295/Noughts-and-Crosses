@@ -88,6 +88,22 @@ public class Main {
         return isIncomplete ? BoardState.INCOMPLETE : BoardState.DRAW;
     }
 
+    private static BoardState checkDiagonal(String board) {
+        boolean isIncomplete = false; // Used to check if the board has open positions
+        // Check first diagonal
+        BoardState state = triadState(board.charAt(0), board.charAt(4), board.charAt(8));
+        if (state != BoardState.INCOMPLETE && state != BoardState.DRAW) {
+            return state;
+        } else if (state == BoardState.INCOMPLETE) isIncomplete = true;
+        // Check second diagonal
+        state = triadState(board.charAt(2), board.charAt(4), board.charAt(6));
+        if (state != BoardState.INCOMPLETE && state != BoardState.DRAW) {
+            return state;
+        } else if (state == BoardState.INCOMPLETE) isIncomplete = true;
+
+        return isIncomplete ? BoardState.INCOMPLETE : BoardState.DRAW;
+    }
+
     /**
      * Checks if the state of the given character triad (three characters). Evaluates if a player won,
      * if it is a draw, or if the set is incomplete. Returns a BoardState corresponding to each outcome.
@@ -120,10 +136,11 @@ public class Main {
     public static void main(String[] args) {
         // Main (driver) function, for illustrating code functionality
         // Diagonal
-        String board1 = "OXOXOXXXO";
+        String board1 = "OXOXOXXOX";
         printBoard(board1);
 //        getWinner(board1);
         System.out.println(checkHorizontal(board1));
         System.out.println(checkVertical(board1));
+        System.out.println(checkDiagonal(board1));
     }
 }
