@@ -7,28 +7,34 @@ public class Main {
         INVALID_BOARD, INVALID_STATE, INCOMPLETE
     }
 
-    private static boolean isValidState(String board) {
-        boolean isValid = false;
-        // Has more noughts than crosses (#X > #O)
-        // Noughts OR crosses are more than 3
-        return isValid;
-    }
-
     /**
-     * Checks the state of the board.
-     * Checks the length and contents of the board
-     * @param board
-     * @return
+     * Checks the length and contents of the board. Returns a boolean value.
+     * Length must be equal to 9. Board can only contain noughts ('O'), crosses ('X') and empty slots ('_').
+     * @param board The String representation of the board.
+     * @return true if the board is valid, false otherwise.
      */
     private static boolean isValidBoard(String board) {
         if (board.length() != 9) return false;  // Board is of right length
         return Pattern.matches("[XO_]+", board); // Use a regular expression to check that the board only contains noughts, crosses or empty spaces
     }
 
+    private static boolean isValidBoardState(String board) {
+        boolean isValid = true;
+        int noughts = 0, crosses = 0;
+        for (char c: board.toCharArray()) {
+            if (c == 'X') crosses++;
+            if (c == 'O') noughts++;
+        }
+        if (crosses != noughts && crosses != noughts + 1) isValid = false;
+        // Noughts OR crosses are more than 3
+        return isValid;
+    }
+
     private static BoardState getStateOfBoard(String board) {
-        BoardState state = null;
-        state = getBoardResult(board); // Get the result of the board
-        return state;
+        // Todo: could merge the error checking
+        if (!isValidBoard(board)) return BoardState.INVALID_BOARD;
+        if (!isValidBoardState(board)) return BoardState.INVALID_STATE;
+        return getBoardResult(board); // Get the result of the board
     }
 
     private static BoardState getBoardResult(String board) {
@@ -49,7 +55,7 @@ public class Main {
         BoardState state;
         boolean isIncomplete = false; // Used to check if the board has open positions
         for (int i = 0; i < 9; i += 3) {
-            state = triadState(board.charAt(i), board.charAt(i + 1), board.charAt(i + 2));
+            state = checkState(board.charAt(i), board.charAt(i + 1), board.charAt(i + 2));
             if (state != BoardState.INCOMPLETE && state != BoardState.DRAW) {
                 return state;
             } else if (state == BoardState.INCOMPLETE) isIncomplete = true;
@@ -61,8 +67,8 @@ public class Main {
         BoardState state;
         boolean isIncomplete = false; // Used to check if the board has open positions
         for (int i = 0; i < 3; i++) {
-            state = triadState(board.charAt(i), board.charAt(i + 3), board.charAt(i + 6));
-            if (state != BoardState.INCOMPLETE && state != BoardState.DRAW) { //
+            state = checkState(board.charAt(i), board.charAt(i + 3), board.charAt(i + 6));
+            if (state != BoardState.INCOMPLETE && state != BoardState.DRAW) {
                 return state;
             } else if (state == BoardState.INCOMPLETE) isIncomplete = true;
         }
@@ -72,12 +78,12 @@ public class Main {
     private static BoardState checkDiagonal(String board) {
         boolean isIncomplete = false; // Used to check if the board has open positions
         // Check first diagonal
-        BoardState state = triadState(board.charAt(0), board.charAt(4), board.charAt(8));
+        BoardState state = checkState(board.charAt(0), board.charAt(4), board.charAt(8));
         if (state != BoardState.INCOMPLETE && state != BoardState.DRAW) {
             return state;
         } else if (state == BoardState.INCOMPLETE) isIncomplete = true;
         // Check second diagonal
-        state = triadState(board.charAt(2), board.charAt(4), board.charAt(6));
+        state = checkState(board.charAt(2), board.charAt(4), board.charAt(6));
         if (state != BoardState.INCOMPLETE && state != BoardState.DRAW) {
             return state;
         } else if (state == BoardState.INCOMPLETE) isIncomplete = true;
@@ -94,7 +100,7 @@ public class Main {
      * @return CROSSES_WIN if the characters are crosses, NOUGHTS_WIN if the characters are noughts, DRAW
      * if the set is complete with no winner, and INCOMPLETE if there are available moves
      */
-    private static BoardState triadState(char x, char y, char z) {
+    private static BoardState checkState(char x, char y, char z) {
         if (x == y && y == z && x != '_') {
             return x == 'X' ? BoardState.CROSSES_WIN  : BoardState.NOUGHTS_WIN;
         } else {
@@ -116,12 +122,9 @@ public class Main {
 
     public static void main(String[] args) {
         // Main (driver) function, for illustrating code functionality
-        // Diagonal
-        String board1 = "OXOXO_XOX";
-        printBoard(board1);
-        System.out.println(getBoardResult(board1));
-//        System.out.println(checkHorizontal(board1));
-//        System.out.println(checkVertical(board1));
-//        System.out.println(checkDiagonal(board1));
+        String[] boards = {"XXXOO____", "XX_OOOX__", "X_OOO_XXX", "XXXOXOXOO", "XOOOXXXXO"};
+        for(String board: boards) {
+            System.out.println(getStateOfBoard(board));
+        }
     }
 }
