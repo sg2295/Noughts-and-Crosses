@@ -155,22 +155,18 @@ public class Main {
     }
 
     private static Board.State driver(String board) {
-        Board a = new Board(board); a.evaluateBoard();
-        return a.getBoardState();
+        Board b = new Board(board);
+        return b.getBoardState();
     }
 
     public static void main(String[] args) {
         // Main (driver) function, for illustrating code functionality
         String[] boards = {"XXXOO____", "XX_OOOX__", "X_OOO_XXX", "XXXOXOXOO", "XOOOXXXXO", "_________", "_X_XX_X__",
-        "XXXXOXOOO"};
-        String s= "XXXOXOXOO";
+        "XXXXOXOOO", "XXXXOOXOO"};
         for(String board: boards) {
-//            printBoard(board);
-            System.out.println(board);
+            printBoard(board);
             System.out.println(getStateOfBoard(board));
             System.out.println(driver(board) + "\n");
-//            printBoard(board);
-//            con(board);
 
         }
     }
