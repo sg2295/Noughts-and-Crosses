@@ -99,5 +99,63 @@ class BoardTest {
         String board4 = "OXXXOOXO_";
         Board b4 = new Board(board4);
         assertEquals(Board.State.INCOMPLETE_BOARD, b4.getBoardState());
+
+        String board5 = "_XXXOOXOO";
+        Board b5 = new Board(board5);
+        assertEquals(Board.State.INCOMPLETE_BOARD, b5.getBoardState());
+    }
+
+    @Test
+    void checkCrossesWin() {
+        String board1 = "XXXOO____";
+        Board b1 = new Board(board1);
+        assertEquals(Board.State.CROSSES_WIN, b1.getBoardState());
+
+        String board2 = "X_OOO_XXX";
+        Board b2 = new Board(board2);
+        assertEquals(Board.State.CROSSES_WIN, b2.getBoardState());
+
+        String board3 = "XXXOXOXOO";
+        Board b3 = new Board(board3);
+        assertEquals(Board.State.CROSSES_WIN, b3.getBoardState());
+
+        String board4 = "XXXOOXOOX";
+        Board b4 = new Board(board4);
+        assertEquals(Board.State.CROSSES_WIN, b4.getBoardState());
+
+        String board5 = "XXXOXOXOO";
+        Board b5 = new Board(board5);
+        assertEquals(Board.State.CROSSES_WIN, b5.getBoardState());
+
+        String board6 = "XOOXXOXOX";
+        Board b6 = new Board(board6);
+        assertEquals(Board.State.CROSSES_WIN, b6.getBoardState());
+
+        String board7 = "OXOXXXOXO";
+        Board b7 = new Board(board7);
+        assertEquals(Board.State.CROSSES_WIN, b7.getBoardState());
+    }
+
+    @Test
+    void checkNoughtsWins() {
+        String board1 = "XX_OOOX__";
+        Board b1 = new Board(board1);
+        assertEquals(Board.State.NOUGHTS_WIN, b1.getBoardState());
+
+        String board2 = "OOO_X__XX";
+        Board b2 = new Board(board2);
+        assertEquals(Board.State.NOUGHTS_WIN, b2.getBoardState());
+
+        String board3 = "O__OX_OXX";
+        Board b3 = new Board(board3);
+        assertEquals(Board.State.NOUGHTS_WIN, b3.getBoardState());
+
+        String board4 = "O__XO_XXO";
+        Board b4 = new Board(board4);
+        assertEquals(Board.State.NOUGHTS_WIN, b4.getBoardState());
+
+        String board5 = "X_XOOO__X";
+        Board b5 = new Board(board5);
+        assertEquals(Board.State.NOUGHTS_WIN, b5.getBoardState());
     }
 }
