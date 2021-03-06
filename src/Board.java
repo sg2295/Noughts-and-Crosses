@@ -29,13 +29,14 @@ public class Board {
     private HashMap<State, Integer> map;
 
     /**
-     * Initializes all variables
-     * @param board
+     * Creates a
+     * @param board String representation of the board.
      */
     public Board (String board) {
-        this.boardState = State.DRAW;
+        this.boardState = State.DRAW; // set the board's state to the default (draw) value
         this.map = new HashMap<>(); this.populateMap();
         this.board = new int[3][3]; this.buildBoard(board);
+        this.evaluateBoard(); // Evaluate the board (calculate the board state)
     }
 
     /**
@@ -55,9 +56,9 @@ public class Board {
                 incomplete = this.map.get(State.INCOMPLETE_BOARD);
         if (noughts == 1 && crosses == 0) { // Noughts 1, Crosses 0
             this.boardState = State.NOUGHTS_WIN;
-        } else if (noughts == 0 && crosses == 1) { // Crosses 1, Noughts 0
+        } else if (noughts == 0 && crosses >= 1) { // Crosses 1, Noughts 0 (or 2 in an exception case)
             this.boardState = State.CROSSES_WIN;
-        } else if ((noughts > 0 && crosses > 0) || (noughts > 1 || crosses > 1)) { // Impossible board
+        } else if (noughts > 0 && crosses > 0) { // Impossible board (Both won)
             this.boardState = State.INVALID_STATE;
         } else if (incomplete > 0) { // Draw, but the board still has possible moves, so incomplete
             this.boardState = State.INCOMPLETE_BOARD;
@@ -85,7 +86,10 @@ public class Board {
      * @param board The String representation of the board.
      */
     public void buildBoard(String board){
-        if (!isValidBoard(board)) this.boardState = State.INVALID_BOARD; // Check that the board is valid (length = 9 and contents = XO_)
+        if (!isValidBoard(board)) {
+            this.boardState = State.INVALID_BOARD; // Check that the board is valid (length = 9 and contents = XO_)
+            return;
+        }
         int crossCount = 0, noughtCount = 0; // Holds the count of noughts and crosses
         char c; // Used to temporarily hold the current character value of the board (String)
         for (int row = 0; row < 3; row++) {
@@ -109,7 +113,7 @@ public class Board {
     /**
      * Evaluates the rows, columns and diagonals of the board and updates board's final state.
      */
-    public void evaluateBoard() {
+    private void evaluateBoard() {
         checkHorizontal(); // Check the horizontal combinations (rows)
         checkVertical(); // Check the vertical combinations (columns)
         checkDiagonal(); // Check the diagonals
@@ -155,7 +159,7 @@ public class Board {
      * @return true if the board is valid, false otherwise.
      */
     private static boolean isValidBoard(String board) {
-        if (board.length() != 9) return false;  // Board length must be 9 (3x3 board)
+        if (board == null || board.length() != 9) return false;  // Board length must be 9 (3x3 board)
         return Pattern.matches("[XO_]+", board); // Use a REGEX to check that the board only contains X, O and _
     }
 
