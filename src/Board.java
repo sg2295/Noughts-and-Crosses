@@ -160,15 +160,6 @@ public class Board {
     }
 
     /**
-     * Checks if the given state is a winning state for either player.
-     * @param state The BoardState to be checked.
-     * @return true if either player won, false otherwise.
-     */
-    private static boolean isWinState(State state) {
-        return state == State.CROSSES_WIN || state == State.NOUGHTS_WIN;
-    }
-
-    /**
      * Checks if the state of the given triad (three indices). Evaluates if a player won, if it is a draw, or if the set
      * is incomplete. Returns a BoardState corresponding to each outcome.
      * @param x First index
