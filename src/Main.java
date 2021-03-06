@@ -52,9 +52,12 @@ public class Main {
      * @return
      */
     private static BoardState getBoardResult(String board) {
-        BoardState horizontalRes = checkHorizontal(board); if (isWinState(horizontalRes)) return horizontalRes;
-        BoardState verticalRes = checkVertical(board); if (isWinState(verticalRes)) return verticalRes;
-        BoardState diagonalRes = checkDiagonal(board); if (isWinState(diagonalRes)) return diagonalRes;
+        BoardState horizontalRes = checkHorizontal(board);
+        if (isWinState(horizontalRes)) return horizontalRes;
+        BoardState verticalRes = checkVertical(board);
+        if (isWinState(verticalRes)) return verticalRes;
+        BoardState diagonalRes = checkDiagonal(board);
+        if (isWinState(diagonalRes)) return diagonalRes;
         return (horizontalRes == verticalRes && verticalRes == diagonalRes && horizontalRes == BoardState.DRAW) ? BoardState.DRAW : BoardState.INCOMPLETE_BOARD;
     }
 
@@ -77,7 +80,7 @@ public class Main {
         boolean isIncomplete = false; // Used to check if the board has open positions
         for (int i = 0; i < 9; i += 3) {
             state = checkState(board.charAt(i), board.charAt(i + 1), board.charAt(i + 2));
-            if (state != BoardState.INCOMPLETE_BOARD && state != BoardState.DRAW) {
+            if (isWinState(state)) {
                 return state;
             } else if (state == BoardState.INCOMPLETE_BOARD) isIncomplete = true;
         }
@@ -94,7 +97,7 @@ public class Main {
         boolean isIncomplete = false; // Used to check if the board has open positions
         for (int i = 0; i < 3; i++) {
             state = checkState(board.charAt(i), board.charAt(i + 3), board.charAt(i + 6));
-            if (state != BoardState.INCOMPLETE_BOARD && state != BoardState.DRAW) {
+            if (isWinState(state)) {
                 return state;
             } else if (state == BoardState.INCOMPLETE_BOARD) isIncomplete = true;
         }
@@ -110,12 +113,12 @@ public class Main {
         boolean isIncomplete = false; // Used to check if the board has open positions
         // Check first diagonal
         BoardState state = checkState(board.charAt(0), board.charAt(4), board.charAt(8));
-        if (state != BoardState.INCOMPLETE_BOARD && state != BoardState.DRAW) {
+        if (isWinState(state)) {
             return state;
         } else if (state == BoardState.INCOMPLETE_BOARD) isIncomplete = true;
         // Check second diagonal
         state = checkState(board.charAt(2), board.charAt(4), board.charAt(6));
-        if (state != BoardState.INCOMPLETE_BOARD && state != BoardState.DRAW) {
+        if (isWinState(state)) {
             return state;
         } else if (state == BoardState.INCOMPLETE_BOARD) isIncomplete = true;
 
@@ -153,8 +156,10 @@ public class Main {
 
     public static void main(String[] args) {
         // Main (driver) function, for illustrating code functionality
-        String[] boards = {"XXXOO____", "XX_OOOX__", "X_OOO_XXX", "XXXOXOXOO", "XOOOXXXXO", "_________", "_X_X_X__"};
+        String[] boards = {"XXXOO____", "XX_OOOX__", "X_OOO_XXX", "XXXOXOXOO", "XOOOXXXXO", "_________", "_X_XX_X__",
+        "XXXXOXOOO"};
         for(String board: boards) {
+//            printBoard(board);
             System.out.println(getStateOfBoard(board));
         }
     }
