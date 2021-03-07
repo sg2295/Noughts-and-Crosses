@@ -65,6 +65,10 @@ class BoardTest {
         String board8 = "___X__X__";
         Board b8 = new Board(board8);
         assertEquals(Board.State.INVALID_STATE, b8.getBoardState());
+
+        String board9 = "XXOOXOO_X";
+        Board b9 = new Board(board9);
+        assertEquals(Board.State.INVALID_STATE, b9.getBoardState());
     }
 
     @Test
@@ -142,6 +146,10 @@ class BoardTest {
         String board8 = "XXXOXOOOX";
         Board b8 = new Board(board8);
         assertEquals(Board.State.CROSSES_WIN, b8.getBoardState());
+
+        String board9 = "XXOOXO__X";
+        Board b9 = new Board(board9);
+        assertEquals(Board.State.CROSSES_WIN, b9.getBoardState());
     }
 
     @Test
