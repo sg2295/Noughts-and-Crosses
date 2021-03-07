@@ -1,16 +1,29 @@
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+/**
+ * Object used to represent a noughts and crosses playing board. Calculates and stores the state of the board.
+ */
 public class Board {
+    /**
+     * Enum used to represent the possible states in a noughts and crosses game. Description of states:
+     * NOUGHTS_WIN, CROSSES_WIN = One of the players won by adding three of their symbol in a row.
+     *                            (Horizontally, Vertically, or Diagonally)
+     * DRAW = No player won and there are no possible moves left. (All spaces have been filled).
+     * INVALID_BOARD = Board does not meet the criteria to be a board.
+     *                 (length != 9 or is not permutation-with-repetition of 'X', 'O', '_')
+     * INVALID_STATE = It is not possible to get such a board (E.g. num of crosses < num of noughts).
+     * INCOMPLETE_BOARD = No winner has been declared and there are still possible moves (empty spaces).
+     */
     public enum State {
         NOUGHTS_WIN, CROSSES_WIN, DRAW,
-        INVALID_BOARD, // Board representation is not valid (Length is not 9, does not consist of 'X','O' and '_')
+        INVALID_BOARD, // Board representation is not valid (Length is not 9, does not consist of only 'X','O' and '_')
         INVALID_STATE, // The given board does not contain a valid combination of noughts and crosses. (Board is not allowed).
         INCOMPLETE_BOARD  // No winner and the board has empty spaces. Game must end in either a win or draw state.
     }
 
     /**
-     * 2-d integer representation of the board.
+     * 2-dimensional integer representation of the board.
      * Representation (key):
      * 1 --> 'X'
      * 0 --> 'O'
@@ -24,18 +37,20 @@ public class Board {
     private State boardState;
 
     /**
-     * Holds the NOUGHTS_WIN, CROSSES_WIN and INCOMPLETE_BOARD state occurrences. Used to decide the final state of the board.
+     * Holds the NOUGHTS_WIN, CROSSES_WIN and INCOMPLETE_BOARD state occurrences.
+     * Used to decide the final state of the board.
      */
     private HashMap<State, Integer> map;
 
     /**
-     * Creates a
+     * Creates a Board object based on the given String representation of the board.
+     * Initializes all attributes and calls the appropriate functions to calculate the board's state.
      * @param board String representation of the board.
      */
     public Board (String board) {
         this.boardState = State.DRAW; // set the board's state to the default (draw) value
         this.map = new HashMap<>(); this.populateMap();
-        this.board = new int[3][3]; this.buildBoard(board);
+        this.board = new int[3][3]; this.buildBoard(board); // Populate the 2-d array
         this.evaluateBoard(); // Evaluate the board (calculate the board state)
     }
 
@@ -56,7 +71,7 @@ public class Board {
                 incomplete = this.map.get(State.INCOMPLETE_BOARD);
         if (noughts == 1 && crosses == 0) { // Noughts 1, Crosses 0
             this.boardState = State.NOUGHTS_WIN;
-        } else if (noughts == 0 && crosses >= 1) { // Crosses 1, Noughts 0 (or 2 in an exception case)
+        } else if (noughts == 0 && crosses >= 1) { // Crosses 1 (or 2 in an exception case), Noughts 0
             this.boardState = State.CROSSES_WIN;
         } else if (noughts > 0 && crosses > 0) { // Impossible board (Both won)
             this.boardState = State.INVALID_STATE;
@@ -78,14 +93,15 @@ public class Board {
     }
 
     /**
-     * Creates a 2-d integer representation of the board (3x3). Has error checking for invalid board configurations.
-     * Representation:
+     * Converts the given String board into a 2-d integer representation of the board (3x3).
+     * Has error checking for invalid board configurations.
+     * Representation (key):
      * 1 --> 'X'
      * 0 --> 'O'
      * -1 --> '_'
      * @param board The String representation of the board.
      */
-    public void buildBoard(String board){
+    private void buildBoard(String board){
         if (!isValidBoard(board)) {
             this.boardState = State.INVALID_BOARD; // Check that the board is valid (length = 9 and contents = XO_)
             return;
@@ -126,8 +142,8 @@ public class Board {
     private void checkHorizontal() {
         State tempState;
         for (int i = 0; i < 3; i++) {
-            tempState = checkState(board[i][0], board[i][1], board[i][2]);
-            this.map.put(tempState, map.get(tempState) + 1);
+            tempState = checkState(board[i][0], board[i][1], board[i][2]); // Check each row (horizontal combination)
+            this.map.put(tempState, map.get(tempState) + 1); // Update the hashmap
         }
     }
 
@@ -137,8 +153,8 @@ public class Board {
     private void checkVertical() {
         State tempState;
         for (int i = 0; i < 3; i++) {
-            tempState = checkState(board[0][i], board[1][i], board[2][i]);
-            this.map.put(tempState, map.get(tempState) + 1);
+            tempState = checkState(board[0][i], board[1][i], board[2][i]); // Check each column (vertical combination)
+            this.map.put(tempState, map.get(tempState) + 1); // Update the hashmap
         }
     }
 
@@ -146,9 +162,9 @@ public class Board {
      * Checks the diagonals of the board and updates the hashmap accordingly.
      */
     private void checkDiagonal() {
-        State tempState = checkState(board[0][0], board[1][1], board[2][2]);
+        State tempState = checkState(board[0][0], board[1][1], board[2][2]); // Check the first diagonal
         this.map.put(tempState, map.get(tempState) + 1);
-        tempState = checkState(board[0][2], board[1][1], board[2][0]);
+        tempState = checkState(board[0][2], board[1][1], board[2][0]); // Check the second diagonal
         this.map.put(tempState, map.get(tempState) + 1);
     }
 
@@ -164,8 +180,8 @@ public class Board {
     }
 
     /**
-     * Checks if the state of the given triad (three indices). Evaluates if a player won, if it is a draw, or if the set
-     * is incomplete. Returns a BoardState corresponding to each outcome.
+     * Calculates the state of the given triad (three indices). Evaluates if a player won, if it is a draw, or if
+     * the set is incomplete. Returns a State corresponding to each outcome.
      * @param x First index
      * @param y Second index
      * @param z Third index
@@ -173,7 +189,7 @@ public class Board {
      * if the set is complete with no winner, and INCOMPLETE if there are available moves
      */
     private State checkState(int x, int y, int z) {
-        if (x == y && y == z && x != -1) {  // All crosses
+        if (x == y && y == z && x != -1) {  // Elements are the same and are not empty.
             return x == 1 ? State.CROSSES_WIN : State.NOUGHTS_WIN;
         } else {
             return (x == -1 || y == -1 || z == -1) ? State.INCOMPLETE_BOARD : State.DRAW;
@@ -182,6 +198,7 @@ public class Board {
 
     /**
      * Prints the given board for debugging purposes. Assumes the board meets the required criteria.
+     * Only used internally when developing the solution.
      */
     private void printBoard() {
         for (int i = 0; i < 3; i++) {
