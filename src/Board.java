@@ -43,13 +43,19 @@ public class Board {
     private final HashMap<State, Integer> map;
 
     /**
+     * Used to keep track of the number of crosses and noughts in the board.
+     */
+    private int crossesCount, noughtsCount;
+
+    /**
      * Creates a Board object based on the given String representation of the board.
      * Initializes all attributes and calls the appropriate functions to calculate the board's state.
      * @param board String representation of the board.
      */
     public Board (String board) {
-        this.boardState = State.DRAW; // set the board's state to the default (draw) value
+        this.boardState = State.DRAW; // Set the board's state to the default (draw) value
         this.map = new HashMap<>(); this.populateMap();
+        this.crossesCount = 0; this.noughtsCount = 0; // Initialize counters
         this.board = new int[3][3]; this.buildBoard(board); // Populate the 2-d array
         this.evaluateBoard(); // Evaluate the board (calculate the board state)
     }
@@ -67,13 +73,13 @@ public class Board {
      */
     private void updateState() {
         if (this.boardState == State.INVALID_BOARD || this.boardState == State.INVALID_STATE) return;
-        int noughts = this.map.get(State.NOUGHTS_WIN), crosses = this.map.get(State.CROSSES_WIN),
+        int noughtsWin = this.map.get(State.NOUGHTS_WIN), crossesWin = this.map.get(State.CROSSES_WIN),
                 incomplete = this.map.get(State.INCOMPLETE_BOARD);
-        if (noughts == 1 && crosses == 0) { // Noughts 1, Crosses 0
-            this.boardState = State.NOUGHTS_WIN;
-        } else if (noughts == 0 && crosses >= 1) { // Crosses 1 (or 2 in an exception case), Noughts 0
-            this.boardState = State.CROSSES_WIN;
-        } else if (noughts > 0 && crosses > 0) { // Impossible board (Both won)
+        if (noughtsWin == 1 && crossesWin == 0) { // Noughts 1, Crosses 0
+            this.boardState = this.noughtsCount == this.crossesCount ? State.NOUGHTS_WIN : State.INVALID_STATE;
+        } else if (noughtsWin == 0 && crossesWin >= 1) { // Crosses 1 (or 2 in an exception case), Noughts 0
+            this.boardState = this.noughtsCount + 1 == this.crossesCount ? State.CROSSES_WIN : State.INVALID_STATE;
+        } else if (noughtsWin > 0 && crossesWin > 0) { // Impossible board (Both won)
             this.boardState = State.INVALID_STATE;
         } else if (incomplete > 0) { // Draw, but the board still has possible moves, so incomplete
             this.boardState = State.INCOMPLETE_BOARD;
@@ -106,24 +112,25 @@ public class Board {
             this.boardState = State.INVALID_BOARD; // Check that the board is valid (length = 9 and contents = XO_)
             return;
         }
-        int crossCount = 0, noughtCount = 0; // Holds the count of noughts and crosses
         char c; // Used to temporarily hold the current character value of the board (String)
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 c = board.charAt(row * 3 + col);
                 if (c == 'X') {
                     this.board[row][col] = 1; // X's are represented by 1's
-                    crossCount++;
+                    this.crossesCount++;
                 } else if (c == 'O') {
                     this.board[row][col] = 0; // O's are represented by 0's
-                    noughtCount++;
+                    this.noughtsCount++;
                 } else {
                     this.board[row][col] = -1; // _'s are represented by -1's
                 }
             }
         }
         // At any given time: #X = #O or #X = #O + 1. Otherwise, the board is in an invalid state.
-        if (crossCount != noughtCount && crossCount != noughtCount + 1) this.boardState = State.INVALID_STATE;
+        if (this.crossesCount != this.noughtsCount && this.crossesCount != this.noughtsCount + 1) {
+            this.boardState = State.INVALID_STATE;
+        }
     }
 
     /**
