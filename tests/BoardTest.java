@@ -134,6 +134,10 @@ class BoardTest {
         String board7 = "OXOXXXOXO";
         Board b7 = new Board(board7);
         assertEquals(Board.State.CROSSES_WIN, b7.getBoardState());
+
+        String board8 = "XXXOXOOOX";
+        Board b8 = new Board(board8);
+        assertEquals(Board.State.CROSSES_WIN, b8.getBoardState());
     }
 
     @Test
