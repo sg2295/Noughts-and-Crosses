@@ -4,8 +4,13 @@
 public class Main {
 
     /**
-     * Prints the given board for debugging purposes. Assumes the board meets the required criteria.
-     * @param board The String representation of the board
+     * Prints the given board in a readable way (in a 3x3 configuration).
+     * Used for debugging purposes. Assumes the board meets the required criteria.
+     * Example print result:
+     *      X X O
+     *      O X _
+     *      O _ _
+     * @param board The String representation of the board.
      */
     private static void printBoard(String board) {
         System.out.println("----\nBoard: ");
@@ -21,10 +26,15 @@ public class Main {
      * @return The state of the board.
      */
     private static Board.State getStateOfBoard(String board) {
-        Board b = new Board(board);
-        return b.getBoardState();
+        Board b = new Board(board); // Create the board and analyze its state
+        return b.getBoardState(); // Return the state of the board
     }
 
+    /**
+     * Main (driver) function used to illustrate code's functionality.
+     * Calls the appropriate functions to calculate each board's state.
+     * @param args Noughts and Crosses boards separated by spaces (" ").
+     */
     public static void main(String[] args) {
         // Main (driver) function, for illustrating code functionality
         String[] boards = {"XXXOO____", "XX_OOOX__", "X_OOO_XXX", "XXXOXOXOO", "XOOOXXXXO", "_________", "_X_XX_X__",
