@@ -26,6 +26,10 @@ class BoardTest {
         String board5 = null; // Null value
         Board b5 = new Board(board5);
         assertEquals(Board.State.INVALID_BOARD, b5.getBoardState());
+
+        String board6 = " ";
+        Board b6 = new Board(board6);
+        assertEquals(Board.State.INVALID_BOARD, b6.getBoardState());
     }
 
     @Test
