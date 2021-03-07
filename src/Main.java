@@ -36,13 +36,8 @@ public class Main {
      * @param args Noughts and Crosses boards separated by spaces (" ").
      */
     public static void main(String[] args) {
-        // Main (driver) function, for illustrating code functionality
-        String[] boards = {"XXXOO____", "XX_OOOX__", "X_OOO_XXX", "XXXOXOXOO", "XOOOXXXXO", "_________", "_X_XX_X__",
-        "XXXXOXOOO", "XXXXOOXOO"};
-        for(String board: boards) {
-//            printBoard(board);
-            System.out.println(getStateOfBoard(board));
-
+        for (int i = 0; i < args.length; i++) {
+            System.out.println(getStateOfBoard(args[i]));
         }
     }
 }
