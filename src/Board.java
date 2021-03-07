@@ -29,7 +29,7 @@ public class Board {
      * 0 --> 'O'
      * -1 --> '_'
      */
-    private int[][] board;
+    private final int[][] board;
 
     /**
      * Holds the state of the board.
@@ -40,7 +40,7 @@ public class Board {
      * Holds the NOUGHTS_WIN, CROSSES_WIN and INCOMPLETE_BOARD state occurrences.
      * Used to decide the final state of the board.
      */
-    private HashMap<State, Integer> map;
+    private final HashMap<State, Integer> map;
 
     /**
      * Creates a Board object based on the given String representation of the board.
